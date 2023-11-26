@@ -4,9 +4,9 @@ namespace App\Form;
 
 use App\Entity\Ingredient;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType; // Ajout de la classe SubmitType
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -40,17 +40,16 @@ class IngredientType extends AbstractType
                     ]),
                     new Assert\Range([
                         'min' => 0,
-                        'max' => 1000000, // Remplacez par la valeur maximale souhaitée
+                        'max' => 1000000, // Replace with the desired maximum value
                         'minMessage' => 'Le prix doit être supérieur ou égal à {{ limit }}.',
                         'maxMessage' => 'Le prix doit être inférieur ou égal à {{ limit }}.',
                     ]),
                 ],
             ])
-            ->add('submit', SubmitType::class, [ // Ajout du champ de type submit
-                'label' => 'Ajouter', // Libellé du bouton submit
-                'attr' => ['class' => 'btn btn-primary'], // Classes CSS pour la mise en forme (Bootstrap)
-            ])
-        ;
+            ->add('submit', SubmitType::class, [
+                'label' => 'Ajouter',
+                'attr' => ['class' => 'btn btn-primary'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
