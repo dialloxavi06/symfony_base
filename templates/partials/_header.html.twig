@@ -1,34 +1,32 @@
-
 <nav class="navbar navbar-inverse">
-				<div class="container-fluid">
-					<ul class="nav navbar-nav">
-						<li class="active">
-							<a href="#">Home</a>
-						</li>
-						<li>
-							<a href="#">Page 1</a>
-						</li>
-						<li>
-							<a href="#">Page 2</a>
-						</li>
-						<li>
-							<a href="#">Page 3</a>
-						</li>
-					</ul>
-				</div>
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="home-link">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="page1-link">Page 1</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="page2-link">Page 2</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="page3-link">Page 3</a>
+            </li>
+        </ul>
+    </div>
 </nav>
 
- <div class="container">
-        <h1>Bienvenue sur notre site</h1>
-
-        <p>Merci de visiter notre site. Profitez de votre exploration!</p>
-        
-        <div>
-            <h2>Nouvelles fonctionnalités</h2>
-            <p>Découvrez nos dernières fonctionnalités et améliorations pour rendre votre expérience encore meilleure.</p>
-        </div>
-
-        <div>
-            <h2>À propos de nous</h2>
-            <p>Apprenez-en plus sur notre entreprise et notre engagement à fournir des services de qualité.</p>
-        </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Sélectionnez tous les liens de la barre de navigation
+        $('.nav-link').click(function () {
+            // Supprimez la classe active de tous les liens
+            $('.nav-link').removeClass('active');
+            
+            // Ajoutez la classe active au lien cliqué
+            $(this).addClass('active');
+        });
+    });
+</script>
