@@ -23,8 +23,7 @@ class Vetement
 
     #[ORM\ManyToOne(targetEntity: Marque::class)]
     #[ORM\JoinColumn(name: "marque_id", referencedColumnName: "id")]
-    private ?Marque $marque = null; // Change the property name to singular
-
+    private ?Marque $marque = null; 
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $tailles = null;

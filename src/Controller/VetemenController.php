@@ -13,6 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\VetemenType;
 use App\Entity\Image;
+use App\Service\ImageUploader;
+
+
+
 
 
 
@@ -42,7 +46,7 @@ class VetemenController extends AbstractController
         ]);
     }
 
-  
+
 
     /**
      * function ajout nouveau vetement
@@ -51,81 +55,89 @@ class VetemenController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    
-     #[Route('vetemen/new', name: 'vetement_new', methods: ['GET', 'POST'])]
-     public function new(Request $request, EntityManagerInterface $entityManager): Response
-     {
-         // Create a new instance of the Vetement entity
-         $vetement = new Vetement();
- 
-         // Create the form, passing the Vetement entity as the data
-         $form = $this->createForm(VetemenType::class, $vetement);
- 
-         // Handle the form submission
-         $form->handleRequest($request);
- 
-         // Check if the form is submitted and valid
-         if ($form->isSubmitted() && $form->isValid()) {
-             // Get the uploaded image file
-             $imageFile = $form->get('image')->getData();
- 
-             // Generate a unique name for the file
-             $imageName = uniqid().'.'.$imageFile->guessExtension();
- 
-             // Move the file to the desired directory
-             $uploadsDirectory = $this->getParameter('kernel.project_dir') . '/public/assets/image';
-             $imageFile->move($uploadsDirectory, $imageName);
- 
-             // Create a new instance of the Image entity
-             $image = new Image();
- 
-             // Set the image path in the Image entity
-             $image->setChemin($imageName);
- 
-             // Set the Vetement entity in the Image entity
-             $image->setVetement($vetement);
- 
-             // Persist the Image entity to the database
-             $entityManager->persist($image);
- 
-             // Persist the Vetement entity to the database
-             $entityManager->persist($vetement);
- 
-             // Flush changes to the database
-             $entityManager->flush();
- 
-             // Redirect to the index page or another route after successful form submission
-             return $this->redirectToRoute('vetement_index');
-         }
- 
-         // Render the form view for the GET request or when the form is not valid
-         return $this->render('vetemen/new.html.twig', [
-             'form' => $form->createView(),
-         ]);
-     }
- 
+
+    #[Route('vetemen/new', name: 'vetement_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $vetement = new Vetement();
+        $form = $this->createForm(VetemenType::class, $vetement);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            $imageName = uniqid() . '.' . $imageFile->guessExtension();
+            $uploadsDirectory = $this->getParameter('kernel.project_dir') . '/public/assets/image';
+            $imageFile->move($uploadsDirectory, $imageName);
+            $image = new Image();
+            $image->setChemin($imageName);
+
+            $image->setVetement($vetement);
+            $entityManager->persist($image);
+            $entityManager->persist($vetement);
+            $entityManager->flush();
+            return $this->redirectToRoute('vetement_index');
+        }
+        return $this->render('vetemen/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
 
     /**
-     * function edit vetement
+     * Function edit vetement
      *
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    #[Route('/vetements/{id}/edit', name: 'vetement_edit', methods: ['GET', 'POST'])]
+    #[Route('/vetemen/{id}/edit', name: 'vetement_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Vetement $vetement, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(VetemenType::class, $vetement);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifiez si un nouveau fichier d'image est soumis
+            $newImageFile = $form->get('image')->getData();
+
+            if ($newImageFile) {
+                // Supprimez l'ancienne image si elle existe
+                // Supprimez l'ancienne image si elle existe
+                $oldImages = $vetement->getImages();
+
+                foreach ($oldImages as $oldImage) {
+                    $oldImagePath = $this->getParameter('kernel.project_dir') . '/public/assets/image/' . $oldImage->getChemin();
+
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+
+                    $entityManager->remove($oldImage);
+                }
+
+
+                // Téléchargez la nouvelle image
+                $newImageName = uniqid() . '.' . $newImageFile->guessExtension();
+                $newImageFile->move($this->getParameter('kernel.project_dir') . '/public/assets/image', $newImageName);
+
+                // Mettez à jour l'entité Image associée au vêtement
+                $newImage = new Image();
+                $newImage->setChemin($newImageName);
+                $newImage->setVetement($vetement);
+                $entityManager->persist($newImage);
+            }
+
+            // Enregistrez les modifications du vêtement
             $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                'Le vêtement a été modifié avec succès.'
+            );
 
             return $this->redirectToRoute('vetement_index');
         }
 
-        return $this->render('vetement/edit.html.twig', [
+        return $this->render('vetemen/edit.html.twig', [
             'vetement' => $vetement,
             'form' => $form->createView(),
         ]);
@@ -139,14 +151,27 @@ class VetemenController extends AbstractController
      * @return Response
      */
 
-    #[Route('/vetements/{id}', name: 'vetement_delete', methods: ['DELETE'])]
+    #[Route('/vetemen/delete/{id}', name: 'vetement_delete', methods: ['POST', 'GET'])]
     public function delete(Request $request, Vetement $vetement, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $vetement->getId(), $request->request->get('_token'))) {
             $entityManager->remove($vetement);
             $entityManager->flush();
+
+            // Ajoutez un message flash de succès
+            $this->addFlash(
+                'success',
+                'Le vêtement a été supprimé avec succès.'
+            );
+        } else {
+            // Ajoutez un message flash d'erreur
+            $this->addFlash(
+                'error',
+                'Erreur lors de la suppression du vêtement.'
+            );
         }
 
+        // Redirige vers la page d'index des vetements
         return $this->redirectToRoute('vetement_index');
     }
 }
