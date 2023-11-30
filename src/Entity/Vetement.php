@@ -183,6 +183,13 @@ class Vetement
         return $this->images;
     }
 
+    public function setImages(?string $image): static
+    {
+        $this->images = $image;
+
+        return $this;
+    }
+
     public function addImage(Image $image): static
     {
         if (!$this->images->contains($image)) {
@@ -204,4 +211,14 @@ class Vetement
 
         return $this;
     }
+
+    // Add the following method to add multiple tailles
+    public function addTaille(string $taille): static
+    {
+        $this->tailles[] = $taille;
+
+        return $this;
+    }
+
+   
 }

@@ -69,7 +69,6 @@ private ?Marque $marques = null;
     public function removeVetement(Vetement $vetement): static
     {
         if ($this->Vetements->removeElement($vetement)) {
-            // set the owning side to null (unless already changed)
             if ($vetement->getMarque() === $this) {
                 $vetement->setMarque(null);
             }
@@ -85,7 +84,7 @@ private ?Marque $marques = null;
 }
 public function __toString()
 {
-    return $this->nom; // replace 'nom' with the actual property you want to display
+    return $this->nom; 
 }
 
 }

@@ -1,56 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes Vêtements{% endblock %}
+{% block title %}Mes Vêtements
+{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Mes Vêtements</h1>
-        <p>Bienvenue sur la liste de mes Vêtements</p>
-        <div class="count mt-4">Il y a {{ vetements.getTotalItemCount }} Vêtement(s)</div>
-
-        {% if vetements|length > 0 %}
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Taille</th>
-                        <th scope="col">Marque</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for vetement in vetements %}
-                        <tr class="table-primary">
-                            <td>{{ vetement.id }}</td>
-                            <td>{{ vetement.nom }}</td>
-                            <td>{{ vetement.description }}</td>
-                            <td>{{ vetement.tailles }}</td>
-                            <td>{{ vetement.marque.nom }}</td>
-                            <td>
-                                {% for image in vetement.images %}
-                                    <img src="{{ asset(image.chemin) }}" alt="Vetement Image" style="max-width: 100px; max-height: 50px;">
-                                {% endfor %}
-                            </td>
-                            <td>
-                                <a href="{{ path('app_ingredient_new') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                                    </svg>
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <div class="navigation d-flex justify-content-center mt-4">
-                {{ knp_pagination_render(vetements) }}
-            </div>
-        {% else %}
-            <h4>Il n'y a pas de vetements</h4>
-        {% endif %}
+	<div class="container">
+		<h1>Mes Vêtements</h1>
+		<p>Bienvenue sur la liste de mes Vêtements</p>
+		<div class="count mt-4">Il y a
+			{{ vetements.getTotalItemCount }}
+			Vêtement(s)</div>
+		<div class="colspann=7">
+    <!-- Votre code existant -->
+ <div class="ml-7">
+        <a href="{{ path('vetement_new') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewbox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+            </svg>
+        </a>
     </div>
+</div>
+
+
+		{% if vetements|length > 0 %}
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Nom</th>
+						<th scope="col">Description</th>
+						<th scope="col">Taille</th>
+						<th scope="col">Marque</th>
+						<th scope="col">Image(s)</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for vetement in vetements %}
+						<tr class="table-primary">
+							<td>{{ vetement.id }}</td>
+							<td>{{ vetement.nom }}</td>
+							<td>{{ vetement.description }}</td>
+							<td>{{ vetement.tailles }}</td>
+							<td>{{ vetement.marque.nom }}</td>
+							<td>
+								{% for image in vetement.images %}
+									<img src="{{ asset('assets/image/' ~ image.chemin) }}" alt="Vetement Image" style="max-width: 100px; max-height: 50px;">
+								{% endfor %}
+							</td>
+							<td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+</svg>
+                            </td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+			<div class="navigation d-flex justify-content-center mt-4">
+				{{ knp_pagination_render(vetements) }}
+			</div>
+		{% else %}
+			<h4>Il n'y a pas de vetements</h4>
+		{% endif %}
+	</div>
 {% endblock %}
+

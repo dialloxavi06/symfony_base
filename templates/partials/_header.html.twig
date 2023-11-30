@@ -11,8 +11,13 @@
             padding-top: 70px; /* Adjust based on your design */
         }
 
+        .navbar {
+            background-color: #87CEEB; /* Bleu ciel */
+        }
+
         .navbar-brand {
-            font-size: 1.5rem;
+            font-size: 2rem; /* Taille de la police plus grande */
+            color: #333; /* Couleur du texte de la marque */
         }
 
         .navbar-nav .nav-item {
@@ -22,6 +27,7 @@
         .nav-link {
             color: #333;
             transition: color 0.3s;
+            font-size: 1.2rem; /* Taille de la police plus grande */
         }
 
         .nav-link:hover,
@@ -34,23 +40,23 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#">Mon logo</a>
+        <a class="navbar-brand" href="{{ path('home.index') }}">Mon logo</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="home-link">Home</a>
+                    <a class="nav-link" href="{{ path('home.index') }}" id="home-link">Home</a> 
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="page1-link">Page 1</a>
+                    <a class="nav-link" href="{{ path('vetement_index') }}" id="page1-link">Vêtements</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="page2-link">Page 2</a>
+                    <a class="nav-link" href="#" id="page2-link">Chaussures</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="page3-link">Page 3</a>
+                    <a class="nav-link" href="#" id="page3-link">Montres</a>
                 </li>
             </ul>
         </div>
