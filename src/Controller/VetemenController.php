@@ -20,8 +20,6 @@ use App\Service\ImageUploader;
 
 
 
-
-
 class VetemenController extends AbstractController
 {
     /**
@@ -38,7 +36,7 @@ class VetemenController extends AbstractController
         $vetements = $paginator->paginate(
             $repository->findAll(),
             $request->query->getInt('page', 1),
-            10
+            7
         );
 
         return $this->render('vetemen/index.html.twig', [

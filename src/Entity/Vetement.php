@@ -43,6 +43,10 @@ class Vetement
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'vetement', cascade: ['persist', 'remove'])]
     private Collection $images;
 
+    #[ORM\ManyToOne(targetEntity: Price::class)]
+    #[ORM\JoinColumn(name: "price_id", referencedColumnName: "id")]    
+    private ?Price $price;
+
     public function __construct()
     {
         $this->tailles = new ArrayCollection();
@@ -218,6 +222,19 @@ class Vetement
 
         return $this;
     }
+
+    public function getPrice(): ?Price
+    {
+        return $this->price;
+    }
+  
+    public function setPrice(?Price $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
 
    
 }

@@ -2,20 +2,88 @@
 
 {% block title %}Home{% endblock %} 
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-image: url('assets/image/background.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            color: #fff;
+        }
+
+        .hero-section h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 1.7em;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            text-decoration: none;
+            color: #fff;
+            background-color: #3498db;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+
+        .feature-section {
+            background-color: #fff;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .feature-section h2 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .feature-section p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        /* Ajoutez d'autres styles selon vos besoins */
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div class="container text-center my-5">
+    <div class="hero-section">
         <h1>Bienvenue sur notre site</h1>
-
         <p>Merci de visiter notre site. Profitez de votre exploration!</p>
-        
-        <div>
-            <h2>Nouvelles fonctionnalités</h2>
-            <p>Découvrez nos dernières fonctionnalités et améliorations pour rendre votre expérience encore meilleure.</p>
-        </div>
+        <a href="{{ path('vetement_index') }}" class="cta-button">Découvrez nos produits</a>
+    </div>
 
-        <div>
-            <h2>À propos de nous</h2>
-            <p>Apprenez-en plus sur notre entreprise et notre engagement à fournir des services de qualité.</p>
-        </div>
+    <div class="feature-section">
+        <h2>Nouvelles fonctionnalités</h2>
+        <p>Découvrez nos dernières fonctionnalités et améliorations pour rendre votre expérience encore meilleure.</p>
+
+        <h2>À propos de nous</h2>
+        <p>Apprenez-en plus sur notre entreprise et notre engagement à fournir des services de qualité.</p>
     </div>
 {% endblock %}
