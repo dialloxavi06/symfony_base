@@ -16,7 +16,7 @@ class Chaussure
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?float $pointure = null;
+    private ?float $pointure = null; 
 
     #[ORM\ManyToOne(inversedBy: 'chaussures')]
     private ?Price $prix = null;
