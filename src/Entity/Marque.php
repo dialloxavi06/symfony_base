@@ -26,6 +26,9 @@ class Marque
  */
 private ?Marque $marques = null;
 
+#[ORM\ManyToOne(inversedBy: 'marque')]
+private ?Chaussure $chaussure = null;
+
     public function __construct()
     {
         $this->Vetements = new ArrayCollection();
@@ -85,6 +88,18 @@ private ?Marque $marques = null;
 public function __toString()
 {
     return $this->nom; 
+}
+
+public function getChaussure(): ?Chaussure
+{
+    return $this->chaussure;
+}
+
+public function setChaussure(?Chaussure $chaussure): static
+{
+    $this->chaussure = $chaussure;
+
+    return $this;
 }
 
 }

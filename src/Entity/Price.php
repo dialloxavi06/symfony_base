@@ -22,9 +22,13 @@ class Price
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $prix = null;
 
+    #[ORM\OneToMany(mappedBy: 'prix', targetEntity: Chaussure::class)]
+    private Collection $chaussures;
+
     public function __construct()
     {
         $this->vetements = new ArrayCollection();
+        $this->chaussures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,6 +73,36 @@ class Price
             // set the owning side to null (unless already changed)
             if ($vetement->getPrice() === $this) {
                 $vetement->setPrice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Chaussure>
+     */
+    public function getChaussures(): Collection
+    {
+        return $this->chaussures;
+    }
+
+    public function addChaussure(Chaussure $chaussure): static
+    {
+        if (!$this->chaussures->contains($chaussure)) {
+            $this->chaussures->add($chaussure);
+            $chaussure->setPrix($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChaussure(Chaussure $chaussure): static
+    {
+        if ($this->chaussures->removeElement($chaussure)) {
+            // set the owning side to null (unless already changed)
+            if ($chaussure->getPrix() === $this) {
+                $chaussure->setPrix(null);
             }
         }
 
