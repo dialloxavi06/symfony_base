@@ -13,6 +13,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ChaussureController extends AbstractController
 {
+    /**
+     * function display my schoes
+     *
+     * @param ChaussureRepository $chossureRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/chaussure', name: 'app_chaussure')]
     public function index(ChaussureRepository $chossureRepository,  PaginatorInterface $paginator, Request $request ): Response
     {

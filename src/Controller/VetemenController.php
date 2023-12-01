@@ -22,6 +22,11 @@ use App\Service\ImageUploader;
 
 class VetemenController extends AbstractController
 {
+
+
+    public function __construct(private ImageUploader $imageUploader)
+    {    }
+
     /**
      * function indexing Vetement
      *
@@ -54,30 +59,44 @@ class VetemenController extends AbstractController
      * @return Response
      */
 
-    #[Route('vetemen/new', name: 'vetement_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $vetement = new Vetement();
-        $form = $this->createForm(VetemenType::class, $vetement);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form->get('image')->getData();
-            $imageName = uniqid() . '.' . $imageFile->guessExtension();
-            $uploadsDirectory = $this->getParameter('kernel.project_dir') . '/public/assets/image';
-            $imageFile->move($uploadsDirectory, $imageName);
-            $image = new Image();
-            $image->setChemin($imageName);
-
-            $image->setVetement($vetement);
-            $entityManager->persist($image);
-            $entityManager->persist($vetement);
-            $entityManager->flush();
-            return $this->redirectToRoute('vetement_index');
-        }
-        return $this->render('vetemen/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
+     #[Route('vetemen/new', name: 'vetement_new', methods: ['GET', 'POST'])]
+     public function new(Request $request, EntityManagerInterface $entityManager, ImageUploader $uploaderService): Response
+     {
+         $vetement = new Vetement();
+         $form = $this->createForm(VetemenType::class, $vetement);
+         $form->handleRequest($request);
+     
+         if ($form->isSubmitted() && $form->isValid()) {
+             $imageFile = $form->get('image')->getData();
+     
+             // this condition is needed because the 'image' field is not required
+             // so the image file must be processed only when a file is uploaded
+             if ($imageFile) {
+                 $directory = $this->getParameter('uploads_directory'); // Assurez-vous d'avoir le bon paramètre
+                 $imageName = $uploaderService->upload($imageFile, $directory);
+     
+                 // Create a new Image entity and set its properties
+                 $image = new Image();
+                 $image->setChemin($imageName);
+                 $image->setVetement($vetement);
+     
+                 // Persist and flush the entities
+                 $entityManager->persist($image);
+             }else {
+             $this->addFlash('error', 'Impossible d\'ajouter ce vêtement');
+         }
+     
+             $entityManager->persist($vetement);
+             $entityManager->flush();
+     
+             $this->addFlash('success', 'Vêtement ajouté avec succès');
+             return $this->redirectToRoute('vetement_index');
+         } 
+     
+         return $this->render('vetemen/new.html.twig', [
+             'form' => $form->createView(),
+         ]);
+     }
 
 
     /**
@@ -98,7 +117,6 @@ class VetemenController extends AbstractController
             $newImageFile = $form->get('image')->getData();
 
             if ($newImageFile) {
-                // Supprimez l'ancienne image si elle existe
                 // Supprimez l'ancienne image si elle existe
                 $oldImages = $vetement->getImages();
 
@@ -126,11 +144,6 @@ class VetemenController extends AbstractController
 
             // Enregistrez les modifications du vêtement
             $entityManager->flush();
-
-            $this->addFlash(
-                'success',
-                'Le vêtement a été modifié avec succès.'
-            );
 
             return $this->redirectToRoute('vetement_index');
         }
