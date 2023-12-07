@@ -10,8 +10,12 @@ class MarqueFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $marques = ['Addidas', 'Nike', 'Puma'
-    ,'sfr', 'lenovo'];
+        $marques = [
+            'Addidas', 'Nike', 'Puma', 'SFR', 'Lenovo',
+            'Apple', 'Samsung', 'Sony', 'Microsoft', 'Google',
+            'Adidas', 'Asus', 'HP', 'Dell', 'Acer',
+            'Coca-Cola', 'Pepsi', 'McDonald\'s', 'Burger King', 'KFC'
+        ];
 
         foreach ($marques as $nomMarque) {
             $marque = new Marque();
